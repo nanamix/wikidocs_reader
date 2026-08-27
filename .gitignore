@@ -1,3 +1,8 @@
 # WikiDocs probe/snapshot artifacts (generated during development)
 .probe_*
 .wikidocs_*
+
+# Node.js / Playwright development artifacts
+package.json
+package-lock.json
+node_modules/
