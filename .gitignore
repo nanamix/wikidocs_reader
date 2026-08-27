@@ -1,0 +1,3 @@
+# WikiDocs probe/snapshot artifacts (generated during development)
+.probe_*
+.wikidocs_*

@@ -1,2 +1,0 @@
-function handlePaginationClick(a,n){a+=1;return $("#id_page").val(a),$(".form").submit(),!1}localStorage.sp=0,$(document).ready(function(){$('input[name="find_kw"]').attr("autocomplete","off"),$("#submit-btn").click(function(a){$('input[name="page"]').val("1")});var a=$("#total_count").val(),n=$("#current_page").val()-1;$("#pagination").pagination(a,{callback:handlePaginationClick,current_page:n,items_per_page:$("#per_page").val(),num_display_entries:5,num_edge_entries:1,prev_text:"이전",next_text:"다음"})});
-//# sourceMappingURL=search.min.js.map
