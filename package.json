@@ -1,0 +1,18 @@
+{
+  "name": "bookoasis-wikidocs",
+  "version": "1.0.0",
+  "description": "BookOasis 독립 플러그인 — WikiDocs 공개 책 검색 및 개인별 독서 기록 관리.",
+  "main": ".wikidocs_book_main_index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.62.1"
+  }
+}
