@@ -1,9 +1,0 @@
-*.db
-*.db-wal
-*.db-shm
-__pycache__/
-*.pyc
-data/
-.hermes/
-
-.installed_req_hash

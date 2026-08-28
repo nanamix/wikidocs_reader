@@ -19,6 +19,15 @@ node_modules/
 # Local plugin dependency/install artifacts
 **/.installed_req_hash
 **/libs/
-plugins/metadata/wikidocs_reader/data/
-plugins/metadata/wikidocs_reader/**/__pycache__/
-plugins/metadata/wikidocs_reader/**/.pytest_cache/
+data/
+__pycache__/
+.pytest_cache/
+*.db
+*.db-wal
+*.db-shm
+__pycache__/
+*.pyc
+data/
+.hermes/
+
+.installed_req_hash

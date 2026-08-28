@@ -4,7 +4,7 @@ import time
 import unittest
 from pathlib import Path
 
-from plugins.metadata.wikidocs_reader import wikidocs_reader as security_log
+import wikidocs_reader as security_log
 
 
 class SecurityLogTests(unittest.TestCase):

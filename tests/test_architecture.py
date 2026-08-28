@@ -2,7 +2,7 @@ from pathlib import Path
 import ast
 import subprocess
 
-ROOT=Path(__file__).parents[1]/'plugins'/'metadata'/'wikidocs_reader'
+ROOT=Path(__file__).parents[1]
 MODULE=ROOT/'wikidocs_reader.py'
 
 
@@ -53,4 +53,6 @@ def test_update_manifest_declares_flat_runtime_files():
 
 def test_no_committed_runtime_artifacts():
     tracked=subprocess.check_output(['git','ls-files',str(ROOT)],text=True).splitlines()
+    deleted=set(subprocess.check_output(['git','ls-files','-d',str(ROOT)],text=True).splitlines())
+    tracked=[p for p in tracked if p not in deleted]
     assert not any('__pycache__' in p or p.endswith(('.pyc','.sqlite3','.sqlite3-wal','.sqlite3-shm')) or p.endswith('/security.log') for p in tracked)

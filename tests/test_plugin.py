@@ -1,4 +1,4 @@
-from plugins.metadata.wikidocs_reader.wikidocs_reader import SearchService
+from wikidocs_reader import SearchService
 class Gateway:
  def __init__(self):self.calls=0
  def search_public_books(self,q,page=1):self.calls+=1;return [{'title':q}]

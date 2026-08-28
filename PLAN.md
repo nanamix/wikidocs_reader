@@ -698,7 +698,7 @@ MVP 이후 필요성이 확인되면 다음 기능을 검토한다.
 ```text
 BookOasis :5930
     │
-    └── plugins/metadata/wikidocs_reader
+    └── wikidocs_reader.py
           ├── WikidocsReaderMetadataProvider
           ├── Category UI
           └── 독립 SQLite
