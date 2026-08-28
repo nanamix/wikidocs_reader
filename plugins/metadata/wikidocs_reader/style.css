@@ -98,3 +98,6 @@
 .wd-reader-dialog #wd-reader{height:auto;flex:1 1 auto;min-height:0;overflow:hidden}
 .wd-reader-dialog:fullscreen{display:flex;flex-direction:column;height:100dvh;min-height:0}
 .wd-reader-dialog:fullscreen .wd-reader-topbar{position:relative;top:auto;z-index:20;visibility:visible;opacity:1}
+
+/* Main WikiDocs page loading states. */
+.wd-page-loading{display:flex;align-items:center;justify-content:center;gap:.6rem;min-height:5rem;padding:1rem;opacity:.75}.wd-page-loading .wd-loading-spinner{width:1.25rem;height:1.25rem;border-width:.2rem}.wikidocs-app button[aria-busy="true"]{cursor:wait}.wikidocs-app button[aria-busy="true"]{opacity:.75}

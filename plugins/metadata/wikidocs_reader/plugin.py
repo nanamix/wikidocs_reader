@@ -46,12 +46,20 @@ class WikidocsReaderMetadataProvider(BaseMetadataProvider):
    return {'success':False,'error':'지원하지 않는 WikiDocs 액션입니다.'}
   op=str((context or {}).get('op') or '').strip()
   user_id=None
-  if op != 'public_books':
-   from .presentation.context import FlaskUserContext
-   user_id=FlaskUserContext().current_user_id()
   if not op:
    return {'success':False,'error':'WikiDocs 작업이 지정되지 않았습니다.'}
   try:
+   if op == 'browser_debug':
+    events=context.get('events') or []
+    if not isinstance(events,list): return {'success':False,'error':'브라우저 로그 형식이 올바르지 않습니다.'}
+    events=events[-50:]
+    from .infrastructure.security_log import security_event
+    security_event('browser_debug', event_count=len(events))
+    for event in events:
+     if isinstance(event,dict):
+      safe={k:event.get(k) for k in ('type','timestamp','fullscreen','topbarExists','hidden','display','visibility','width','height','zIndex','message','bookId') if k in event}
+      security_event('browser_event', **safe)
+    return {'success':True,'count':len(events)}
    if op == 'search':
     return {'success':True,'items':self.search_service.search(str(context.get('query') or '').strip())}
    if op == 'public_books':
@@ -62,6 +70,9 @@ class WikidocsReaderMetadataProvider(BaseMetadataProvider):
      item=dict(item); item['book_id']=local['id'] if local else None; item['in_my_books']=bool(local and user_id is not None and self.books.contains(user_id,local['id']))
      enriched.append(item)
     return {'success':True,'items':enriched,'page':page,'has_next':len(items)==20,'has_prev':page>1}
+   if user_id is None:
+    from .presentation.context import FlaskUserContext
+    user_id=FlaskUserContext().current_user_id()
    if user_id is None:
     return {'success':False,'error':'로그인이 필요합니다.'}
    if op == 'books':
