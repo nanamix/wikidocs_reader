@@ -84,3 +84,10 @@
 
 /* Reader tables: lightly shade table header cells. */
 .wd-reader-dialog #wd-content table th{background-color:#f1f1f1}
+
+/* Reader fullscreen mode: use the entire available screen when supported. */
+.wd-reader-dialog:fullscreen{width:100vw;height:100vh;height:100dvh;max-width:none;max-height:none;margin:0;border-radius:0;background:Canvas;color:CanvasText}
+.wd-reader-dialog:fullscreen .wd-reader-topbar{padding-top:max(.75rem,env(safe-area-inset-top));}
+
+.wd-pages{position:relative}
+.wd-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.75rem;min-height:12rem;font-size:.95rem;color:inherit;background:inherit;z-index:5}.wd-loading[hidden]{display:none}.wd-loading-spinner{width:2rem;height:2rem;border:.25rem solid currentColor;border-right-color:transparent;border-radius:50%;animation:wd-loading-spin .8s linear infinite}@keyframes wd-loading-spin{to{transform:rotate(360deg)}}@media (prefers-reduced-motion:reduce){.wd-loading-spinner{animation:none}}
