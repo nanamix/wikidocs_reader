@@ -62,13 +62,17 @@ class WikidocsReaderMetadataProvider(BaseMetadataProvider):
    if user_id is None:
     return {'success':False,'error':'로그인이 필요합니다.'}
    if op == 'books':
-    return {'success':True,'items':self.books.my_books(user_id)}
+    items=[]
+    for book in self.books.my_books(user_id):
+     book=dict(book); book['progress']=self.reading.get_progress(user_id,int(book['id']))
+     items.append(book)
+    return {'success':True,'items':items}
    if op == 'add':
     remote_id=int(context['remote_id'])
     return {'success':True,'book_id':self.books.import_book(remote_id,user_id)}
    if op == 'detail':
     book_id=int(context['book_id'])
-    book=self.books.get_book_for_user(user_id,book_id)
+    book=self.books.get_for_user(user_id,book_id)
     if not book:return {'success':False,'error':'책을 찾을 수 없습니다.'}
     return {'success':True,'book':book,'progress':self.reading.get_progress(user_id,book_id),'pages':self.books.sync_pages(user_id,book_id)}
    if op == 'page':
@@ -77,17 +81,17 @@ class WikidocsReaderMetadataProvider(BaseMetadataProvider):
     return {'success':True,'page':page} if page else {'success':False,'error':'페이지를 찾을 수 없습니다.'}
    if op == 'progress':
     book_id=int(context['book_id'])
-    if not self.books.get_book_for_user(user_id,book_id):return {'success':False,'error':'책을 찾을 수 없습니다.'}
+    if not self.books.get_for_user(user_id,book_id):return {'success':False,'error':'책을 찾을 수 없습니다.'}
     self.reading.save_position(user_id,book_id,context.get('page_id'),context.get('position',0),context.get('pages_read',0),context.get('total_pages',0))
     return {'success':True,'progress':self.reading.get_progress(user_id,book_id)}
    if op == 'complete':
     book_id=int(context['book_id'])
-    if not self.books.get_book_for_user(user_id,book_id):return {'success':False,'error':'책을 찾을 수 없습니다.'}
+    if not self.books.get_for_user(user_id,book_id):return {'success':False,'error':'책을 찾을 수 없습니다.'}
     self.reading.complete(user_id,book_id,int(context.get('total_pages',0)))
     return {'success':True,'progress':self.reading.get_progress(user_id,book_id)}
    if op == 'reset':
     book_id=int(context['book_id'])
-    if not self.books.get_book_for_user(user_id,book_id):return {'success':False,'error':'책을 찾을 수 없습니다.'}
+    if not self.books.get_for_user(user_id,book_id):return {'success':False,'error':'책을 찾을 수 없습니다.'}
     self.reading.mark_unread(user_id,book_id)
     return {'success':True}
    return {'success':False,'error':'지원하지 않는 WikiDocs 작업입니다.'}

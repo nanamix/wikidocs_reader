@@ -6,3 +6,12 @@
 package.json
 package-lock.json
 node_modules/
+
+# Local/runtime databases and sensitive development data
+*.sqlite3
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
+**/data/
+**/__pycache__/
+*.py[cod]

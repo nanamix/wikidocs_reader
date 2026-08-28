@@ -1,2 +1,83 @@
 .wikidocs-app{padding:1rem}.wd-search{display:flex;gap:.5rem}.wd-search input{flex:1}.wd-result,.wikidocs-app section article{display:flex;gap:1rem;align-items:center;padding:.7rem 0;border-bottom:1px solid #ddd}.wd-book-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}.wd-book-grid .wd-result{display:flex;flex-direction:column;align-items:flex-start;gap:.45rem;padding:1rem;border:1px solid #ddd;border-radius:.5rem}.wd-book-grid .wd-result small{margin-left:0}.wd-pagination{display:flex;align-items:center;justify-content:center;gap:.75rem;margin:1rem 0}.wd-pagination button{min-width:5rem}@media (max-width:600px){.wd-book-grid{grid-template-columns:1fr}}.wd-result small{margin-left:auto;opacity:.65}.wd-error{color:#b00}.wd-actions,.wd-nav{display:flex;gap:.5rem;margin:.75rem 0}.wd-toc-label{display:block;margin:1rem 0 .4rem;font-weight:600}.wd-toc-select{display:block;width:100%;max-width:100%;padding:.6rem;border:1px solid #ccc;border-radius:.4rem;background:inherit;font:inherit}.wd-reader-head{display:flex;justify-content:space-between;gap:1rem}.wd-reader-head span{opacity:.7}#wd-content{line-height:1.8;overflow:auto;max-height:70vh;padding:1rem 0}#wd-content img{max-width:100%;height:auto}
 .wd-book-actions{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+#wd-books.wd-book-grid .wd-result{min-width:0}
+
+.wd-reader-modal{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.55);padding:0;overflow:auto}.wd-reader-modal[hidden]{display:none}.wd-reader-dialog{box-sizing:border-box;height:100dvh;min-height:100%;width:100%;background:Canvas;color:CanvasText;position:relative;padding:1rem 1rem 0;overflow:hidden}.wd-reader-close{position:sticky;top:0;float:right;z-index:2;font-size:1.5rem;line-height:1;width:2.25rem;height:2.25rem;border:0;background:transparent;cursor:pointer}.wd-reader-dialog #wd-reader{clear:both;display:flex;flex-direction:column;height:calc(100dvh - 3.5rem);min-height:0}.wd-reader-dialog .wd-toc-label{order:0}.wd-reader-dialog .wd-toc-select{order:1}.wd-reader-dialog .wd-reader-head{order:2}.wd-reader-dialog .wd-actions{order:3}.wd-reader-dialog #wd-content{order:4;flex:1;max-height:none;overflow:auto;padding:1rem 0 5rem}.wd-reader-dialog .wd-nav{order:5;position:sticky;bottom:0;background:Canvas;padding:.75rem 0;border-top:1px solid #ddd;justify-content:space-between;margin:0}.wd-reader-dialog .wd-nav button{min-width:6rem;padding:.6rem 1rem}.wd-reader-open{overflow:hidden}
+
+.wd-reader-dialog{max-width:100vw}.wd-reader-dialog #wd-content{box-sizing:border-box;max-width:900px;width:100%;margin:0 auto}.wd-reader-dialog .wd-reader-head,.wd-reader-dialog .wd-actions,.wd-reader-dialog .wd-toc-label,.wd-reader-dialog .wd-toc-select{max-width:900px;margin-left:auto;margin-right:auto}.wd-reader-dialog .wd-nav{padding-left:max(1rem,calc((100vw - 900px)/2));padding-right:max(1rem,calc((100vw - 900px)/2))}
+
+.wd-reader-dialog .wd-reader-topbar{order:0;display:flex;align-items:center;gap:.5rem;position:sticky;top:0;z-index:3;background:Canvas;padding-bottom:.5rem}.wd-reader-dialog .wd-reader-topbar .wd-toc-select{order:0;flex:1;min-width:0;margin:0}.wd-reader-dialog .wd-reader-topbar .wd-reader-close{order:1;position:static;float:none;flex:0 0 auto}.wd-reader-dialog #wd-reader>.wd-toc-label,.wd-reader-dialog #wd-reader>.wd-toc-select{display:none}
+
+.wd-reader-dialog{padding:0 1rem}.wd-reader-topbar{display:flex;align-items:center;justify-content:space-between;gap:.75rem;position:sticky;top:0;z-index:10;background:Canvas;padding:.75rem 0;border-bottom:1px solid #ddd}.wd-reader-modal-title{font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.wd-reader-topbar .wd-reader-close{position:static;float:none;flex:0 0 auto}.wd-reader-dialog #wd-reader{height:calc(100dvh - 4rem)}.wd-reader-dialog #wd-reader .wd-toc-label{flex:0 0 auto}.wd-reader-dialog #wd-reader .wd-toc-select{display:block;box-sizing:border-box;width:100%;max-width:none;flex:0 0 auto;margin:0 0 .75rem}.wd-reader-dialog #wd-reader>.wd-toc-label{order:0}.wd-reader-dialog #wd-reader>.wd-toc-select{order:1}.wd-reader-dialog #wd-reader>.wd-reader-head{order:2}.wd-reader-dialog #wd-reader>#wd-content{order:3}.wd-reader-dialog #wd-reader>.wd-nav{order:4}
+
+.wd-reader-theme{position:static;float:none;flex:0 0 auto;width:2.25rem;height:2.25rem;border:0;background:transparent;color:inherit;cursor:pointer;font-size:1.2rem}.wd-reader-dark{background:#181818!important;color:#eee!important}.wd-reader-dark .wd-reader-topbar{background:#181818;border-color:#444}.wd-reader-dark .wd-nav{background:#181818;border-color:#444}.wd-reader-dark #wd-content{color:#eee}.wd-reader-dark a{color:#9ecbff}.wd-reader-dark select,.wd-reader-dark button{background:#282828;color:#eee;border-color:#555}
+.wd-reader-dialog .wd-reader-topbar{justify-content:flex-end}
+
+.wd-reader-dialog .wd-reader-theme{margin-left:0;margin-right:.15rem}
+.wd-reader-dialog .wd-reader-close{margin-left:0}
+.wd-reader-dialog #wd-content{overflow-wrap:anywhere;word-wrap:break-word;word-break:normal;white-space:normal;max-width:100%;box-sizing:border-box}.wd-reader-dialog #wd-content p,.wd-reader-dialog #wd-content li,.wd-reader-dialog #wd-content td,.wd-reader-dialog #wd-content th{overflow-wrap:anywhere;word-break:normal;white-space:normal}.wd-reader-dialog #wd-content pre{white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;max-width:100%;box-sizing:border-box}.wd-reader-dialog #wd-content table{max-width:100%;width:auto;table-layout:auto;overflow-wrap:anywhere}.wd-reader-dialog #wd-content img,.wd-reader-dialog #wd-content video{max-width:100%;height:auto}
+
+.wd-reader-dialog .wd-reader-brand{font-weight:600;white-space:nowrap;flex:0 0 auto;margin-right:auto}.wd-reader-dialog .wd-reader-topbar{padding-top:.75rem;padding-bottom:.75rem}.wd-reader-dialog .wd-nav{padding-top:1rem;padding-bottom:1.75rem;margin-bottom:env(safe-area-inset-bottom,0px)}
+
+.wd-reader-dialog .wd-reader-brand{font-weight:600;white-space:nowrap;flex:0 0 auto;margin-right:auto}.wd-reader-dialog .wd-reader-topbar{justify-content:flex-end}
+
+.wd-reader-dialog #wd-content pre{display:block;margin:1rem 0;padding:1rem;overflow-x:auto;overflow-y:hidden;white-space:pre;word-break:normal;overflow-wrap:normal;max-width:100%;box-sizing:border-box;border:1px solid #d0d0d0;border-radius:.5rem;background:#f5f5f5;color:#222;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:.9rem;line-height:1.55}.wd-reader-dialog #wd-content pre code{white-space:inherit;overflow-wrap:normal;word-break:normal;font:inherit;background:transparent;padding:0;border:0}.wd-reader-dialog #wd-content code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}.wd-reader-dark #wd-content pre{background:#242424;color:#eee;border-color:#555}.wd-reader-dark #wd-content code{color:#eee}
+
+/* Reader content wrapping: prose wraps; only code preserves whitespace. */
+.wd-reader-dialog #wd-content{display:block;width:100%;max-width:900px;min-width:0;box-sizing:border-box;overflow-x:hidden;overflow-y:auto;white-space:normal;overflow-wrap:anywhere;word-break:normal}
+.wd-reader-dialog #wd-content>*{max-width:100%;box-sizing:border-box}
+.wd-reader-dialog #wd-content p,.wd-reader-dialog #wd-content li,.wd-reader-dialog #wd-content td,.wd-reader-dialog #wd-content th,.wd-reader-dialog #wd-content div,.wd-reader-dialog #wd-content span{white-space:normal;overflow-wrap:anywhere;word-break:normal;max-width:100%}
+.wd-reader-dialog #wd-content pre{display:block;width:100%;max-width:100%;box-sizing:border-box;white-space:pre-wrap;overflow-x:auto;overflow-y:hidden;overflow-wrap:anywhere;word-break:break-word}
+.wd-reader-dialog #wd-content pre code{white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}
+.wd-reader-dialog #wd-content img,.wd-reader-dialog #wd-content video,.wd-reader-dialog #wd-content iframe{max-width:100%;box-sizing:border-box}
+
+.wd-reader-autoscroll{position:static;float:none;flex:0 0 auto;width:2.25rem;height:2.25rem;border:0;background:transparent;color:inherit;cursor:pointer;font-size:1rem}.wd-reader-dialog .wd-reader-autoscroll{margin-left:0;margin-right:.15rem}.wd-reader-dark .wd-reader-autoscroll{color:#eee}
+
+
+/* Ensure the reader content is the actual flex scroll container. */
+.wd-reader-dialog #wd-reader{min-height:0;overflow:hidden}
+.wd-reader-dialog #wd-content{min-height:0;flex:1 1 auto;overflow-y:auto;overflow-x:hidden}
+
+.wd-reader-speed{height:2.25rem;width:2.7rem;min-width:2.7rem;margin-right:.2rem;padding:0 .15rem;border:1px solid #bbb;border-radius:.35rem;background:transparent;color:inherit;font-size:.85rem}.wd-reader-dialog .wd-reader-speed:focus{outline:2px solid currentColor;outline-offset:1px}
+
+/* Desktop reader: two WikiDocs pages side by side. Mobile remains single-page. */
+.wd-reader-dialog .wd-pages{display:flex;flex:1 1 auto;min-height:0;gap:1.5rem;overflow:hidden}.wd-reader-dialog .wd-pages>article{min-width:0}.wd-reader-dialog #wd-content-right[hidden]{display:none}@media (min-width:801px){.wd-reader-dialog .wd-pages>article{flex:1 1 0;overflow-y:auto;overflow-x:hidden;padding:1rem .75rem 5rem;border-right:1px solid #ddd}.wd-reader-dialog .wd-pages>article:last-child{border-right:0}.wd-reader-dialog #wd-content{overflow-y:auto}.wd-reader-dark .wd-reader-dialog .wd-pages>article{border-color:#444}}@media (max-width:800px){.wd-reader-dialog .wd-pages{display:block}.wd-reader-dialog .wd-pages>article{height:100%;overflow-y:auto}}
+
+@media (min-width:801px){.wd-reader-dialog .wd-pages{display:block;overflow:hidden}.wd-reader-dialog .wd-pages>#wd-content{width:100%;max-width:100%;height:100%;overflow-y:auto;overflow-x:hidden}.wd-reader-dialog #wd-content-right{display:none!important}}
+
+/* Restore TOC above the reader content on every viewport. */
+.wd-reader-dialog #wd-reader{display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.wd-reader-dialog #wd-reader>.wd-toc-select{display:block;order:0;flex:0 0 auto}
+.wd-reader-dialog #wd-reader>.wd-pages{order:1;flex:1 1 auto;min-height:0;display:block;overflow:hidden}
+.wd-reader-dialog #wd-reader>.wd-nav{order:2;flex:0 0 auto}
+.wd-reader-dialog #wd-content{height:100%;max-height:none;min-height:0;box-sizing:border-box;overflow-y:auto;overflow-x:hidden}
+
+/* Restore table borders and WikiDocs background colors inside the reader. */
+.wd-reader-dialog #wd-content table{border-collapse:collapse;border-spacing:0}
+.wd-reader-dialog #wd-content table th,.wd-reader-dialog #wd-content table td{border:1px solid #999;padding:.4rem .55rem}
+.wd-reader-dialog #wd-content table thead th{border-color:#777}
+.wd-reader-dialog #wd-content table,.wd-reader-dialog #wd-content tr,.wd-reader-dialog #wd-content td,.wd-reader-dialog #wd-content th{background-clip:padding-box}
+.wd-reader-dark #wd-content table th,.wd-reader-dark #wd-content table td{border-color:#777}
+
+/* Compact reader controls: halve the spacing between speed, auto-scroll, theme and close. */
+.wd-reader-dialog .wd-reader-topbar{gap:.25rem}
+.wd-reader-dialog .wd-reader-speed{margin-right:0}
+.wd-reader-dialog .wd-reader-autoscroll{margin-left:0;margin-right:0}
+.wd-reader-dialog .wd-reader-theme{margin-left:0;margin-right:0}
+.wd-reader-dialog .wd-reader-close{margin-left:0}
+
+/* WikiDocs reader: hide promotional actions from the source document. */
+.wd-reader-dialog #wd-content a[href*="recommend"],
+.wd-reader-dialog #wd-content a[href*="coffee"],
+.wd-reader-dialog #wd-content a[href*="donate"],
+.wd-reader-dialog #wd-content [class*="recommend"],
+.wd-reader-dialog #wd-content [class*="coffee"],
+.wd-reader-dialog #wd-content [class*="donate"]{display:none!important}
+
+/* The reader lives in a modal; it must not reserve space on the WikiDocs main page. */
+.wikidocs-app > #wd-reader-modal[hidden]{display:none!important}
+.wikidocs-app > #wd-reader{display:none!important}
+
+/* Main WikiDocs page: the reader modal must occupy zero layout space until opened. */
+.wikidocs-app > .wd-reader-modal[hidden]{display:none!important;position:fixed!important;inset:0!important;width:0!important;height:0!important;margin:0!important;padding:0!important;border:0!important;overflow:hidden!important}
+.wikidocs-app > .wd-reader-modal:not([hidden]){display:block;position:fixed;inset:0;margin:0;padding:0}
