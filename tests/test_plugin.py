@@ -15,7 +15,9 @@ def test_desktop_reader_arrow_navigation_handler():
     from pathlib import Path
     script = Path(__file__).resolve().parents[1] / 'script.js'
     source = script.read_text()
-    assert "'ArrowLeft','ArrowRight','ArrowUp','ArrowDown','PageUp','PageDown'" in source
+    assert "'ArrowLeft','ArrowRight','ArrowUp','ArrowDown','PageUp','PageDown','Home','End'" in source
+    assert "e.key==='Home'||e.key==='End'" in source
+    assert "content.scrollTo({top:e.key==='Home'?0:content.scrollHeight" in source
     assert "this.index+(e.key==='ArrowLeft'?-1:1)" in source
     assert "e.preventDefault()" in source
 
