@@ -23,7 +23,10 @@ class WikidocsReaderMetadataProvider(BaseMetadataProvider):
   self.books=BookService(books,pages,users,gateway);self.reading=ReadingService(progress,users);self.search_service=SearchService(PublicBookSearch(client),CacheRepository(db))
  def search(self,db_type,query):
   try:return self.search_service.search(query)
-  except WikiDocsError:return []
+  except WikiDocsError as exc:
+   from .infrastructure.security_log import security_event
+   security_event('search_error', error_type=type(exc).__name__)
+   return []
  def apply(self,db_type,book_id,item_data):
   try:
    from .presentation.context import FlaskUserContext
@@ -103,4 +106,7 @@ class WikidocsReaderMetadataProvider(BaseMetadataProvider):
    from .presentation.context import FlaskUserContext
    u=FlaskUserContext().current_user_id()
    return {'success':True,'items':self.reading.recent(u,limit)} if u is not None else {'success':False,'error':'로그인이 필요합니다.'}
-  except Exception:return {'success':False,'items':[]}
+  except Exception as exc:
+   from .infrastructure.security_log import security_event
+   security_event('dashboard_error', error_type=type(exc).__name__)
+   return {'success':False,'items':[]}
