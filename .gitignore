@@ -15,3 +15,7 @@ node_modules/
 **/data/
 **/__pycache__/
 *.py[cod]
+
+# Local plugin dependency/install artifacts
+**/.installed_req_hash
+**/libs/
