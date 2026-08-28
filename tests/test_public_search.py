@@ -12,6 +12,6 @@ class FakeClient:
 def test_public_book_search_parses_html():
     results = PublicBookSearch(FakeClient()).search("파이썬")
     assert results == [
-        {"wikidocs_book_id": 1, "title": "점프 투 파이썬", "url": "https://wikidocs.net/book/1"},
-        {"wikidocs_book_id": 922, "title": "초보자를 위한 파이썬 300제", "url": "https://wikidocs.net/book/922"},
+        {"wikidocs_book_id": 1, "title": "점프 투 파이썬", "author": None, "published_at": None, "url": "https://wikidocs.net/book/1"},
+        {"wikidocs_book_id": 922, "title": "초보자를 위한 파이썬 300제", "author": None, "published_at": None, "url": "https://wikidocs.net/book/922"},
     ]

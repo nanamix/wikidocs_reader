@@ -11,6 +11,52 @@ class WikiDocsError(RuntimeError):
     pass
 
 
+ALLOWED_HTML_TAGS = {
+    "p", "br", "hr", "div", "span", "section", "article",
+    "h1", "h2", "h3", "h4", "h5", "h6",
+    "strong", "b", "em", "i", "u", "s", "del", "ins",
+    "ul", "ol", "li", "dl", "dt", "dd",
+    "blockquote", "pre", "code",
+    "table", "thead", "tbody", "tfoot", "tr", "th", "td",
+    "a", "img",
+}
+ALLOWED_ATTRS = {
+    "a": {"href", "title", "target", "rel"},
+    "img": {"src", "alt", "title", "width", "height"},
+    "th": {"colspan", "rowspan"},
+    "td": {"colspan", "rowspan"},
+}
+
+def sanitize_content_html(html: str) -> str:
+    """Sanitize remote WikiDocs HTML before it can reach the browser.
+
+    The reader intentionally supports rich text, tables, code blocks and images,
+    but does not trust remote markup. Scripts, executable embeds, event handlers,
+    inline styles and unsafe URLs are removed.
+    """
+    soup = BeautifulSoup(html or "", "html.parser")
+    for tag in list(soup.find_all(True)):
+        name = tag.name.lower()
+        if name not in ALLOWED_HTML_TAGS:
+            tag.decompose()
+            continue
+        allowed = ALLOWED_ATTRS.get(name, set())
+        for attr in list(tag.attrs):
+            if attr.lower().startswith("on") or attr.lower() == "style" or attr.lower() not in allowed:
+                del tag.attrs[attr]
+        if name == "a":
+            href = tag.get("href", "")
+            if href and not (href.startswith("/") or href.startswith("#") or href.startswith("https://") or href.startswith("http://")):
+                tag.attrs.pop("href", None)
+            if tag.get("target") == "_blank":
+                tag["rel"] = "noopener noreferrer"
+        elif name == "img":
+            src = tag.get("src", "")
+            if not (src.startswith("/") or src.startswith("https://") or src.startswith("http://")):
+                tag.decompose()
+    return str(soup)
+
+
 class WikiDocsClient:
     def __init__(self, base_url: str = BASE_URL, timeout: int = 15):
         self.base_url = base_url.rstrip("/")
@@ -105,4 +151,4 @@ class WikiDocsClient:
         if not content:
             raise WikiDocsError(f"WikiDocs public page {page_id} has no content")
         return {"id": page_id, "title": " ".join(title.stripped_strings).strip() if title else "",
-                "content_html": str(content), "url": f"https://wikidocs.net/{page_id}"}
+                "content_html": sanitize_content_html(str(content)), "url": f"https://wikidocs.net/{page_id}"}

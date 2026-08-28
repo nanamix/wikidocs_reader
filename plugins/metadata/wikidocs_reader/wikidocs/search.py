@@ -7,6 +7,8 @@ from .client import WikiDocsClient
 class PublicBookSearchResult:
     wikidocs_book_id: int
     title: str
+    author: str | None
+    published_at: str | None
     url: str
 
 class PublicBookSearch:

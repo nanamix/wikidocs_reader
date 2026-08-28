@@ -1,4 +1,5 @@
 from ..domain.ports import BookStore,PageStore,UserBookStore,WikiDocsGateway
+from ..wikidocs.client import sanitize_content_html
 class BookService:
  def __init__(self,books:BookStore,pages:PageStore,users:UserBookStore,gateway:WikiDocsGateway):self.books,self.pages,self.users,self.gateway=books,pages,users,gateway
  def import_book(self,remote_id,user_id):
@@ -18,4 +19,6 @@ class BookService:
   if not p or p['book_id']!=b:return None
   if not p.get('content_html'):
    r=self.gateway.get_page(p['wikidocs_page_id']);p.update(content_html=r.get('content_html'),title=r.get('title') or p['title'],url=r.get('url') or p['url']);self.pages.upsert(p)
+  if p.get('content_html'):
+   p['content_html']=sanitize_content_html(p['content_html'])
   return p
