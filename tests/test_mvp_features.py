@@ -1,6 +1,6 @@
-from plugins.metadata.wikidocs_reader.application.book_service import BookService
-from plugins.metadata.wikidocs_reader.application.reading_service import ReadingService
-from plugins.metadata.wikidocs_reader.application.search_service import SearchService
+from plugins.metadata.wikidocs_reader.wikidocs_reader import BookService
+from plugins.metadata.wikidocs_reader.wikidocs_reader import ReadingService
+from plugins.metadata.wikidocs_reader.wikidocs_reader import SearchService
 class Books:
  def __init__(self): self.d={}
  def upsert(self,b):

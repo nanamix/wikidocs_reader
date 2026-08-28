@@ -1,4 +1,4 @@
-from plugins.metadata.wikidocs_reader.wikidocs.search import PublicBookSearch
+from plugins.metadata.wikidocs_reader.wikidocs_reader import PublicBookSearch
 
 
 class FakeClient:
