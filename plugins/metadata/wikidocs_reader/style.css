@@ -91,3 +91,10 @@
 
 .wd-pages{position:relative}
 .wd-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.75rem;min-height:12rem;font-size:.95rem;color:inherit;background:inherit;z-index:5}.wd-loading[hidden]{display:none}.wd-loading-spinner{width:2rem;height:2rem;border:.25rem solid currentColor;border-right-color:transparent;border-radius:50%;animation:wd-loading-spin .8s linear infinite}@keyframes wd-loading-spin{to{transform:rotate(360deg)}}@media (prefers-reduced-motion:reduce){.wd-loading-spinner{animation:none}}
+
+/* Stable reader chrome: keep the topbar in normal layout flow so content cannot cover it. */
+.wd-reader-dialog{display:flex;flex-direction:column;min-height:0;height:100dvh;overflow:hidden}
+.wd-reader-dialog .wd-reader-topbar{position:relative;top:auto;z-index:20;flex:0 0 auto;display:flex;visibility:visible;opacity:1;isolation:isolate}
+.wd-reader-dialog #wd-reader{height:auto;flex:1 1 auto;min-height:0;overflow:hidden}
+.wd-reader-dialog:fullscreen{display:flex;flex-direction:column;height:100dvh;min-height:0}
+.wd-reader-dialog:fullscreen .wd-reader-topbar{position:relative;top:auto;z-index:20;visibility:visible;opacity:1}
