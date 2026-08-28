@@ -63,7 +63,7 @@ class WikidocsReaderMetadataProvider(BaseMetadataProvider):
    if op == 'search':
     return {'success':True,'items':self.search_service.search(str(context.get('query') or '').strip())}
    if op == 'public_books':
-    page=max(1,int(context.get('page',1))); items=self.search_service.list_public(page)
+    page=max(1,int(context.get('page',1))); sort_type=str(context.get('sort_type') or 'recent'); items=self.search_service.list_public(page, sort_type)
     enriched=[]
     for item in items:
      local=self.books.get_by_remote_id(int(item['wikidocs_book_id']))

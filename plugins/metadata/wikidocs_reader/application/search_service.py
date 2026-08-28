@@ -7,13 +7,14 @@ class SearchService:
         self.gateway = gateway
         self.cache = cache
 
-    def list_public(self, page=1):
+    def list_public(self, page=1, sort_type='recent'):
         page = max(1, int(page))
-        key = cache_key('public-books', page)
+        sort_type = sort_type if sort_type in {'recent', 'recommend', 'popular'} else 'recent'
+        key = cache_key('public-books', page, sort_type)
         hit = self.cache.get(key)
         if hit:
             return json.loads(hit)
-        value = self.gateway.list_public(page=page)
+        value = self.gateway.list_public(page=page, sort_type=sort_type)
         self.cache.set(key, json.dumps(value, ensure_ascii=False), PUBLIC_BOOK_LIST_TTL)
         self.cache.purge()
         self.cache.purge_to_size(MAX_CACHE_BYTES)

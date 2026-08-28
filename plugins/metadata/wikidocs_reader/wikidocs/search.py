@@ -15,8 +15,10 @@ class PublicBookSearch:
     def __init__(self, client: WikiDocsClient | None = None):
         self.client = client or WikiDocsClient()
 
-    def list_public(self, page: int = 1) -> list[dict[str, object]]:
-        return self._parse(self.client.list_public_books(page=page, sort_type="recent"))
+    def list_public(self, page: int = 1, sort_type: str = "recent") -> list[dict[str, object]]:
+        if sort_type not in {"recent", "recommend", "popular"}:
+            sort_type = "recent"
+        return self._parse(self.client.list_public_books(page=page, sort_type=sort_type))
 
     def search(self, query: str, page: int = 1) -> list[dict[str, object]]:
         return self._parse(self.client.search_public_books(query, page=page))

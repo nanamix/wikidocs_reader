@@ -118,7 +118,9 @@ class DebugPanel {
 }
 
 class LibraryController {
-  constructor(dom, api, interactions, loading, busy) { this.dom = dom; this.api = api; this.interactions = interactions; this.loading = loading; this.busy = busy; this.publicPage = 1; }
+  constructor(dom, api, interactions, loading, busy) { this.dom = dom; this.api = api; this.interactions = interactions; this.loading = loading; this.busy = busy; this.publicPage = 1; this.publicSort = this.loadPublicSort(); }
+  loadPublicSort() { try { const value = window.localStorage.getItem('wikidocs_reader_public_sort'); return ['recent','recommend','popular'].includes(value) ? value : 'recent'; } catch { return 'recent'; } }
+  savePublicSort(value) { try { window.localStorage.setItem('wikidocs_reader_public_sort', value); } catch {} }
   esc(value) { return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
   async search() {
     const query = this.dom.$('#wd-query')?.value.trim(); if (!query) return;
@@ -126,9 +128,9 @@ class LibraryController {
     const data = await this.api.call('search', {query, page: 1});
     node.innerHTML = data.items.map(x => `<article class="wd-result"><b>${this.esc(x.title)}</b><small>#${x.wikidocs_book_id}</small><button data-add="${x.wikidocs_book_id}">내 책에 추가</button></article>`).join('') || '<p>검색 결과가 없습니다.</p>';
   }
-  async loadPublicBooks(page = this.publicPage, fromPagination = false) {
-    this.publicPage = Math.max(1, page); const node = this.dom.$('#wd-public-books'); this.loading.page(node, '불러오는 중...');
-    const data = await this.api.call('public_books', {page: this.publicPage});
+  async loadPublicBooks(page = this.publicPage, fromPagination = false, sortType = this.publicSort) {
+    this.publicPage = Math.max(1, page); this.publicSort = ['recent','recommend','popular'].includes(sortType) ? sortType : 'recent'; const node = this.dom.$('#wd-public-books'); const sort=this.dom.$('#wd-public-sort'); if(sort) sort.value=this.publicSort; this.loading.page(node, '불러오는 중...');
+    const data = await this.api.call('public_books', {page: this.publicPage, sort_type: this.publicSort});
     node.innerHTML = data.items.map(x => `<article class="wd-result"><b>${this.esc(x.title)}</b><small>${this.esc(x.author || '')} ${this.esc(x.published_at || '')}</small><div class="wd-book-actions">${x.in_my_books ? `<button data-public-open="${x.book_id}">이어 읽기</button>` : `<button data-public-add="${x.wikidocs_book_id}">내 책에 추가</button>`}<a href="${this.esc(x.url)}" target="_blank" rel="noopener">WikiDocs에서 보기</a></div></article>`).join('') || '<p>공개 도서를 불러오지 못했습니다.</p>';
     const pagination = this.dom.$('#wd-public-pagination'); pagination.innerHTML = `<button data-public-page="${this.publicPage-1}" ${data.has_prev?'':'disabled'}>이전</button><span>${this.publicPage} 페이지</span><button data-public-page="${this.publicPage+1}" ${data.has_next?'':'disabled'}>다음</button>`;
     if (fromPagination) node.scrollIntoView({behavior:'smooth', block:'start'});
@@ -141,7 +143,9 @@ class LibraryController {
   install(reader) {
     this.dom.on('#wd-search','click',()=>this.search().catch(showError));
     this.dom.on('#wd-query','keydown',e=>{if(e.key==='Enter')this.search().catch(showError);});
+    this.dom.on('#wd-public-title','dblclick',()=>{const el=this.dom.$('#wd-public-sort');if(el){el.hidden=!el.hidden;if(!el.hidden)el.focus();}});
     this.dom.on('#wd-public-pagination','click',e=>{const page=e.target.dataset.publicPage;if(page&&!e.target.disabled)this.loadPublicBooks(Number(page),true).catch(showError);});
+    this.dom.on('#wd-public-sort','change',e=>{const value=e.target.value;this.savePublicSort(value);this.loadPublicBooks(1,false,value).catch(showError);e.target.hidden=true;});
     this.dom.on('#wd-public-books','click',async e=>{const add=e.target.dataset.publicAdd, open=e.target.dataset.publicOpen;if(add){try{const added=await this.busy.run(e.target,()=>this.interactions.run('add',{remote_id:add},{key:`add|${add}`}));await this.loadBooks();await this.loadPublicBooks(this.publicPage);await reader.openBook(Number(added.book_id));}catch(err){showError(err)}} if(open)reader.openBook(Number(open)).catch(showError);});
     this.dom.on('#wd-results','click',e=>{const id=e.target.dataset.add;if(id)this.busy.run(e.target,()=>this.interactions.run('add',{remote_id:id},{key:`add|${id}`})).then(()=>this.loadBooks()).catch(showError);});
     this.dom.on('#wd-books','click',async e=>{const id=e.target.dataset.book, complete=e.target.dataset.completeBook, reset=e.target.dataset.resetBook;if(id){reader.openBook(id).catch(showError);return;}try{if(complete){const d=await this.api.call('detail',{book_id:Number(complete)});await this.busy.run(e.target,()=>this.interactions.run('complete',{book_id:Number(complete),total_pages:(d.pages||[]).length},{key:`complete|${complete}`}));await this.loadBooks();}else if(reset){await this.busy.run(e.target,()=>this.interactions.run('reset',{book_id:Number(reset)},{key:`reset|${reset}`}));await this.loadBooks();}}catch(err){showError(err)}});
