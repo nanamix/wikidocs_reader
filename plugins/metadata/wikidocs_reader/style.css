@@ -81,3 +81,6 @@
 /* Main WikiDocs page: the reader modal must occupy zero layout space until opened. */
 .wikidocs-app > .wd-reader-modal[hidden]{display:none!important;position:fixed!important;inset:0!important;width:0!important;height:0!important;margin:0!important;padding:0!important;border:0!important;overflow:hidden!important}
 .wikidocs-app > .wd-reader-modal:not([hidden]){display:block;position:fixed;inset:0;margin:0;padding:0}
+
+/* Reader tables: lightly shade table header cells. */
+.wd-reader-dialog #wd-content table th{background-color:#f1f1f1}
