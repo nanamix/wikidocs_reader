@@ -1,9 +1,13 @@
 from ..domain.ports import BookStore,PageStore,UserBookStore,WikiDocsGateway
-from ..wikidocs.client import sanitize_content_html
+from ..wikidocs.client import sanitize_content_html,WikiDocsError
 class BookService:
  def __init__(self,books:BookStore,pages:PageStore,users:UserBookStore,gateway:WikiDocsGateway):self.books,self.pages,self.users,self.gateway=books,pages,users,gateway
  def import_book(self,remote_id,user_id):
-  r=self.gateway.get_book(remote_id); b=self.books.upsert({'wikidocs_book_id':remote_id,'title':r.get('title') or '제목 없음','author':r.get('author'),'description':r.get('description'),'cover_url':r.get('cover_url'),'url':r.get('url') or f'https://wikidocs.net/book/{remote_id}','page_count':r.get('page_count',0)});self.users.add(user_id,b);return b
+  r=self.gateway.get_book(remote_id)
+  if not isinstance(r,dict):
+   raise WikiDocsError(f'WikiDocs 도서 정보를 가져오지 못했습니다. (book_id={remote_id})')
+  b=self.books.upsert({'wikidocs_book_id':remote_id,'title':r.get('title') or '제목 없음','author':r.get('author'),'description':r.get('description'),'cover_url':r.get('cover_url'),'url':r.get('url') or f'https://wikidocs.net/book/{remote_id}','page_count':r.get('page_count',0)})
+  self.users.add(user_id,b);return b
  def get_for_user(self,u,b):return self.books.get(b) if self.users.contains(u,b) else None
  def my_books(self,u):return self.users.list(u)
  def get_by_remote_id(self,remote_id):return self.books.get_by_remote_id(remote_id)

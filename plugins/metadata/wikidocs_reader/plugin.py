@@ -1,26 +1,21 @@
-from pathlib import Path
-try:
-    from plugins.metadata.base import BaseMetadataProvider
-except ImportError:
-    class BaseMetadataProvider:
-        """Minimal standalone compatibility base; no Core DB access."""
-        pass
-from .infrastructure.database import Database
+from plugins.metadata.base import BaseMetadataProvider
 from .infrastructure.repositories import BookRepository,PageRepository,UserBookRepository,ReadingProgressRepository
 from .infrastructure.cache import CacheRepository
+from .infrastructure.schema import ensure_schema
 from .wikidocs.client import WikiDocsClient,WikiDocsError
 from .wikidocs.search import PublicBookSearch
 from .application.book_service import BookService
 from .application.reading_service import ReadingService
 from .application.search_service import SearchService
-ROOT=Path(__file__).resolve().parent;DB_PATH=ROOT/'data'/'wikidocs.sqlite3'
 class WikidocsReaderMetadataProvider(BaseMetadataProvider):
  id='wikidocs_reader';name='WikiDocs';is_searchable=True;enabled=True
  category_tab={'title':'WikiDocs','icon':'fa-solid fa-book-open','order':80,'sessions':['general']}
  dashboard_widget={'title':'WikiDocs','subtitle':'최근 읽은 WikiDocs 책','provider':'WikiDocs','icon':'fa-solid fa-book-open','limit':20,'supported_types':['general']}
+ config_schema=[]
+ update_manifest={'enabled':True,'provider':'github-raw','raw_base_url':'https://raw.githubusercontent.com/C-Rhapsody/bookoasis-wikidocs/main/plugins/metadata/wikidocs_reader','files':['plugin.py','__init__.py','script.js','index.html','style.css','settings.html','requirements.txt','VERSION','application/book_service.py','application/cache_policy.py','application/cache_service.py','application/reading_service.py','application/search_service.py','domain/models.py','domain/ports.py','infrastructure/cache.py','infrastructure/repositories.py','infrastructure/schema.py','presentation/context.py','wikidocs/client.py','wikidocs/search.py'],'version_file':'VERSION','version_key':'plugin version','show_sample_update_button':True}
  def __init__(self,db=None,gateway=None):
-  db=db or Database(DB_PATH);db.migrate();client=WikiDocsClient();gateway=gateway or client;books=BookRepository(db);pages=PageRepository(db);users=UserBookRepository(db);progress=ReadingProgressRepository(db)
-  self.books=BookService(books,pages,users,gateway);self.reading=ReadingService(progress,users);self.search_service=SearchService(PublicBookSearch(client),CacheRepository(db))
+  gateway = gateway or self.get_db_gateway(db or 'general'); ensure_schema(gateway); client=WikiDocsClient(); books=BookRepository(gateway);pages=PageRepository(gateway);users=UserBookRepository(gateway);progress=ReadingProgressRepository(gateway)
+  self.books=BookService(books,pages,users,client);self.reading=ReadingService(progress,users);self.search_service=SearchService(PublicBookSearch(client),CacheRepository(gateway))
  def search(self,db_type,query):
   try:return self.search_service.search(query)
   except WikiDocsError as exc:
@@ -110,7 +105,7 @@ class WikidocsReaderMetadataProvider(BaseMetadataProvider):
     return {'success':True}
    return {'success':False,'error':'지원하지 않는 WikiDocs 작업입니다.'}
   except (KeyError,TypeError,ValueError,WikiDocsError,PermissionError) as e:
-   return {'success':False,'error':str(e)}
+   return {'success':False,'error':str(e) or f'{type(e).__name__}'}
 
  def get_dashboard_data(self,db_type,limit=20):
   try:
