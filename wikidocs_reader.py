@@ -525,7 +525,7 @@ class WikidocsReaderMetadataProvider(BaseMetadataProvider):
  category_tab={'title':'WikiDocs','icon':'fa-solid fa-book-open','order':80,'sessions':['general']}
  dashboard_widget={'title':'WikiDocs','subtitle':'최근 읽은 WikiDocs 책','provider':'WikiDocs','icon':'fa-solid fa-book-open','limit':20,'supported_types':['general']}
  config_schema=[]
- update_manifest={'enabled':True,'provider':'github-raw','raw_base_url':'https://raw.githubusercontent.com/C-Rhapsody/bookoasis-wikidocs/main','files':['wikidocs_reader.py','__init__.py','script.js','index.html','style.css','requirements.txt','VERSION'],'version_file':'VERSION','version_key':'plugin version','show_sample_update_button':True}
+ update_manifest={'enabled':True,'provider':'github-raw','raw_base_url':'https://raw.githubusercontent.com/C-Rhapsody/wikidocs_reader/main','files':['wikidocs_reader.py','__init__.py','script.js','index.html','style.css','requirements.txt','VERSION'],'version_file':'VERSION','version_key':'plugin version','show_sample_update_button':True}
  def __init__(self,db=None,gateway=None):
   gateway = gateway or self.get_db_gateway(db or 'general'); ensure_schema(gateway); client=WikiDocsClient(); books=BookRepository(gateway);pages=PageRepository(gateway);users=UserBookRepository(gateway);progress=ReadingProgressRepository(gateway)
   self.books=BookService(books,pages,users,client);self.reading=ReadingService(progress,users);self.search_service=SearchService(PublicBookSearch(client),CacheRepository(gateway))
