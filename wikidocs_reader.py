@@ -291,7 +291,12 @@ class CacheRepository:
  def __init__(self,db): self.db=db
  def get(self,key):
   r=self.db.fetch_one('SELECT value FROM wikidocs_cache WHERE cache_key=? AND expires_at>?',(key,time.time())); return r['value'] if r else None
- def set(self,key,value,ttl): self.db.execute('INSERT INTO wikidocs_cache(cache_key,value,expires_at,created_at) VALUES(?,?,?,?) ON CONFLICT(cache_key) DO UPDATE SET value=excluded.value,expires_at=excluded.expires_at,created_at=excluded.created_at',(key,value,time.time()+ttl,time.time()))
+ def set(self,key,value,ttl):
+  now=time.time(); expires=now+ttl
+  if getattr(self.db,'_engine','sqlite') in ('mariadb','mysql'):
+   self.db.execute('INSERT INTO wikidocs_cache(cache_key,value,expires_at,created_at) VALUES(?,?,?,?) ON DUPLICATE KEY UPDATE value=VALUES(value),expires_at=VALUES(expires_at),created_at=VALUES(created_at)',(key,value,expires,now))
+  else:
+   self.db.execute('INSERT INTO wikidocs_cache(cache_key,value,expires_at,created_at) VALUES(?,?,?,?) ON CONFLICT(cache_key) DO UPDATE SET value=excluded.value,expires_at=excluded.expires_at,created_at=excluded.created_at',(key,value,expires,now))
  def purge(self): self.db.execute('DELETE FROM wikidocs_cache WHERE expires_at<=?',(time.time(),))
  def purge_to_size(self,max_bytes):
   while True:
