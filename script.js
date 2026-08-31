@@ -13,7 +13,7 @@ class Dom {
 class WikiDocsApi {
   constructor(fetchImpl, pluginId) { this.fetch = fetchImpl; this.pluginId = pluginId; }
   async call(op, context = {}) {
-    const response = await this.fetch('/bookoasis/api/media/context-menu/book/plugins/action', {
+    const response = await this.fetch('api/media/context-menu/book/plugins/action', {
       method: 'POST', credentials: 'same-origin',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({plugin_id: this.pluginId, action_id: 'wikidocs_rpc', context: {op, ...context}})
