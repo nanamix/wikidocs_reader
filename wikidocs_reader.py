@@ -94,6 +94,12 @@ ALLOWED_HTML_TAGS = {
     "blockquote", "pre", "code",
     "table", "thead", "tbody", "tfoot", "tr", "th", "td",
     "a", "img",
+    "figure", "figcaption", "sup", "sub", "kbd", "samp", "var",
+    "mark", "details", "summary",
+}
+DANGEROUS_HTML_TAGS = {
+    "script", "style", "iframe", "object", "embed", "form", "input",
+    "button", "svg",
 }
 ALLOWED_ATTRS = {
     "a": {"href", "title", "target", "rel"},
@@ -110,14 +116,21 @@ def sanitize_content_html(html: str) -> str:
     inline styles and unsafe URLs are removed.
     """
     soup = BeautifulSoup(html or "", "html.parser")
+    for tag in soup.find_all(DANGEROUS_HTML_TAGS):
+        tag.decompose()
     for tag in list(soup.find_all(True)):
+        if not isinstance(tag.name, str):
+            continue
         name = tag.name.lower()
         if name not in ALLOWED_HTML_TAGS:
-            tag.decompose()
+            tag.unwrap()
             continue
         allowed = ALLOWED_ATTRS.get(name, set())
         for attr in list(tag.attrs):
-            if attr.lower().startswith("on") or attr.lower() == "style" or attr.lower() not in allowed:
+            if not isinstance(attr, str):
+                continue
+            attr_name = attr.lower()
+            if attr_name.startswith("on") or attr_name == "style" or attr_name not in allowed:
                 del tag.attrs[attr]
         if name == "a":
             href = tag.get("href", "")
@@ -447,8 +460,6 @@ class BookService:
   if not p or p['book_id']!=b:return None
   if not p.get('content_html'):
    r=self.gateway.get_page(p['wikidocs_page_id']);p.update(content_html=r.get('content_html'),title=r.get('title') or p['title'],url=r.get('url') or p['url']);self.pages.upsert(p)
-  if p.get('content_html'):
-   p['content_html']=sanitize_content_html(p['content_html'])
   return p
 
 # ===== application/reading_service.py =====
