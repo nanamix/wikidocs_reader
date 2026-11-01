@@ -12,6 +12,7 @@ node_modules/
 *.sqlite3-journal
 *.sqlite3-wal
 *.sqlite3-shm
+security.log
 **/data/
 **/__pycache__/
 *.py[cod]

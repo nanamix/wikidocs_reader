@@ -79,7 +79,7 @@ WikiDocs 공개 페이지는 `curl_cffi`를 이용해 가져오며, 공개 페�
 
 Git 저장소 이름과 BookOasis의 plugin ID는 별개의 개념입니다.
 
-- GitHub repository: `C-Rhapsody/wikidocs_reader`
+- GitHub repository: `nanamix/wikidocs_reader`
 - plugin ID: `wikidocs_reader`
 - Python provider module: `wikidocs_reader.py`
 
@@ -139,7 +139,7 @@ git diff --check
 현재 GitHub 원격 저장소:
 
 ```text
-https://github.com/C-Rhapsody/wikidocs_reader
+https://github.com/nanamix/wikidocs_reader
 ```
 
 ## 범위

@@ -412,6 +412,8 @@ def _prune(now: float) -> None:
             for line in fh:
                 try:
                     record = json.loads(line)
+                    if not isinstance(record, dict):
+                        continue
                     if float(record.get("ts", 0)) >= cutoff:
                         lines.append(line.rstrip("\n"))
                 except (json.JSONDecodeError, TypeError, ValueError):
@@ -541,7 +543,7 @@ class WikidocsReaderMetadataProvider(BaseMetadataProvider):
  category_tab={'title':'WikiDocs','icon':'fa-solid fa-book-open','order':80,'sessions':['general']}
  dashboard_widget={'title':'WikiDocs','subtitle':'최근 읽은 WikiDocs 책','provider':'WikiDocs','icon':'fa-solid fa-book-open','limit':20,'supported_types':['general']}
  config_schema=[]
- update_manifest={'enabled':True,'provider':'github-raw','raw_base_url':'https://raw.githubusercontent.com/C-Rhapsody/wikidocs_reader/main','files':['wikidocs_reader.py','__init__.py','script.js','index.html','style.css','requirements.txt','VERSION'],'version_file':'VERSION','version_key':'plugin version','show_sample_update_button':True}
+ update_manifest={'enabled':True,'provider':'github-raw','raw_base_url':'https://raw.githubusercontent.com/nanamix/wikidocs_reader/main','files':['wikidocs_reader.py','__init__.py','script.js','index.html','style.css','requirements.txt','VERSION'],'version_file':'VERSION','version_key':'plugin version','show_sample_update_button':True}
  def __init__(self,db=None,gateway=None):
   gateway = gateway or self.get_db_gateway(db or 'general'); ensure_schema(gateway); client=WikiDocsClient(); books=BookRepository(gateway);pages=PageRepository(gateway);users=UserBookRepository(gateway);progress=ReadingProgressRepository(gateway)
   self.books=BookService(books,pages,users,client);self.reading=ReadingService(progress,users);self.search_service=SearchService(PublicBookSearch(client),CacheRepository(gateway))
@@ -584,6 +586,7 @@ class WikidocsReaderMetadataProvider(BaseMetadataProvider):
    if op == 'search':
     return {'success':True,'items':self.search_service.search(str(context.get('query') or '').strip())}
    if op == 'public_books':
+    user_id=FlaskUserContext().current_user_id()
     page=max(1,int(context.get('page',1))); sort_type=str(context.get('sort_type') or 'recent'); items=self.search_service.list_public(page, sort_type)
     enriched=[]
     for item in items:
@@ -616,7 +619,12 @@ class WikidocsReaderMetadataProvider(BaseMetadataProvider):
    if op == 'progress':
     book_id=int(context['book_id'])
     if not self.books.get_for_user(user_id,book_id):return {'success':False,'error':'책을 찾을 수 없습니다.'}
-    self.reading.save_position(user_id,book_id,context.get('page_id'),context.get('position',0),context.get('pages_read',0),context.get('total_pages',0))
+    page_id=context.get('page_id')
+    if page_id is not None:
+     page_id=int(page_id)
+     page=self.books.pages.get(page_id)
+     if not page or page['book_id']!=book_id:return {'success':False,'error':'페이지를 찾을 수 없습니다.'}
+    self.reading.save_position(user_id,book_id,page_id,context.get('position',0),context.get('pages_read',0),context.get('total_pages',0))
     return {'success':True,'progress':self.reading.get_progress(user_id,book_id)}
    if op == 'complete':
     book_id=int(context['book_id'])
