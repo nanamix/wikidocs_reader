@@ -386,7 +386,13 @@ SCHEMA = [
 '''CREATE INDEX IF NOT EXISTS idx_wikidocs_progress_user_last_read ON wikidocs_reading_progress(user_id,last_read_at(255))''',
 ]
 def ensure_schema(gateway):
- for sql in SCHEMA: gateway.execute(sql)
+ # TEXT index prefixes are required by MySQL/MariaDB, but SQLite parses
+ # column(255) as a function call and fails during provider initialization.
+ mysql = getattr(gateway, '_engine', 'sqlite') in ('mysql', 'mariadb')
+ for sql in SCHEMA:
+  if not mysql and sql.startswith('CREATE INDEX'):
+   sql = sql.replace('updated_at(255)', 'updated_at').replace('last_read_at(255)', 'last_read_at')
+  gateway.execute(sql)
 
 # ===== infrastructure/security_log.py =====
 """Server-side security event logging with a hard 24-hour retention window."""
